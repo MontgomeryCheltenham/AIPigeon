@@ -7,25 +7,26 @@
 
 public class AIPigeonMain {
 	int tries, resF, resP, fs0, fs1;  //result for food (0 or 1), result for pigeon (0 or 1), nº of times food appears on either side
-	double ratio;  // ratio after which te pigeon realizes success rate of one side is significant; controls 'intelligence' of the pigeon
+	double ratio;  // ratio after which the pigeon realizes success rate of one side is significant; controls 'intelligence' of the pigeon
+	int n=5; // probability of food appearing on a given side, 5 = 50% each, n>5 = left side more likely
 	String foodState, pigeonState;
 	
 	public static void main(String[] args) {
 		new AIPigeonMain();
 	}
 	public AIPigeonMain() {
-		tries=20; ratio=1.2;
+		tries=20; ratio=1.2; n=5; //change n for higher probability on one side, change ratio for 'smarter' pigeon
 		for(int i=0; i<tries; i++) {
 			System.out.print(i+1+". ");
 			resF = (int)(Math.random()*10+1); //side with food chosen at random with equal probability
-			if(resF<=5) { foodState="0"; fs0++; } else if(resF>5) { foodState="1"; fs1++; }
+			if(resF<=n) { foodState="0"; fs0++; } else if(resF>n) { foodState="1"; fs1++; }
 			System.out.print("foodState "+foodState);
 			// pigeon learns food is more likely to appear on a given side
-			if(fs0+fs1>9 && fs0/fs1>ratio) { pigeonState="0"; System.out.print(" (learned 0)"); }
-			else if(fs0+fs1>9 && fs1/fs0>ratio) { pigeonState="1"; System.out.print(" (learned 1)"); }
+			if(fs0+fs1>9 && fs1!=0 && fs0/fs1>ratio) { pigeonState="0"; System.out.print(" (learned 0)"); }
+			else if(fs0+fs1>9 && fs0!=0 && fs1/fs0>ratio) { pigeonState="1"; System.out.print(" (learned 1)"); }
 			else {
 				resP = (int)(Math.random()*10+1);  // if no statistically significant difference, the pigeon continues to choose food at random
-				if(resP<=5) { pigeonState="0"; } else if(resP>5) { pigeonState="1"; }
+				if(resP<=n) { pigeonState="0"; } else if(resP>n) { pigeonState="1"; }
 			}
 			
 			System.out.println(" pigeonState "+pigeonState);
